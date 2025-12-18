@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro Profesional</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <button class="history-toggle" id="historyToggle" aria-label="Ver historial de registros">
+        <i class="fas fa-history"></i>
+        <span class="history-count">0</span>
+    </button>
+
+    <div class="container">
+        <div class="form-wrapper">
+            <div class="form-header">
+                <h1><i class="fas fa-user-plus"></i> Formulario de Registro</h1>
+                <p class="subtitle">Validación en tiempo real con JavaScript</p>
+            </div>
+            
+            <form id="registrationForm" novalidate>
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Nombre de Usuario *</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="username" name="username" placeholder="Mínimo 3 caracteres" autocomplete="username">
+                        <span class="success-icon"><i class="fas fa-check"></i></span>
+                    </div>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Correo Electrónico *</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" autocomplete="email">
+                        <span class="success-icon"><i class="fas fa-check"></i></span>
+                    </div>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Contraseña *</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+                        <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <span class="success-icon"><i class="fas fa-check"></i></span>
+                    </div>
+                    <span class="error-message"></span>
+                    <div class="password-requirements">
+                        <p class="requirement" id="req-length">
+                            <span class="req-icon">○</span> Mínimo 8 caracteres
+                        </p>
+                        <p class="requirement" id="req-uppercase">
+                            <span class="req-icon">○</span> Una mayúscula
+                        </p>
+                        <p class="requirement" id="req-number">
+                            <span class="req-icon">○</span> Un número
+                        </p>
+                        <p class="requirement" id="req-nospace">
+                            <span class="req-icon">○</span> Sin espacios
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword"><i class="fas fa-lock"></i> Confirmar Contraseña *</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repite la contraseña" autocomplete="new-password">
+                        <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <span class="success-icon"><i class="fas fa-check"></i></span>
+                    </div>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="age"><i class="fas fa-birthday-cake"></i> Edad *</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="age" name="age" placeholder="Mayor de 18 años" min="18" max="120" step="1">
+                        <span class="success-icon"><i class="fas fa-check"></i></span>
+                    </div>
+                    <span class="error-message"></span>
+                    <div class="age-note">
+                        <i class="fas fa-info-circle"></i> Solo números enteros (ej: 19, 25, 30)
+                    </div>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="terms" name="terms">
+                    <label for="terms">Acepto los <a href="#" class="terms-link">términos y condiciones</a> *</label>
+                    <span class="error-message"></span>
+                </div>
+
+                <div class="progress-info">
+                    <span id="progressText">0/6 campos completados</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                    <span class="btn-text"><i class="fas fa-user-plus"></i> Registrarse</span>
+                    <span class="btn-loader"><i class="fas fa-spinner fa-spin"></i></span>
+                </button>
+            </form>
+            
+            <div class="welcome-message">
+                <i class="fas fa-star"></i>
+                <p>¡Bienvenido! Completa todos los campos para registrarte.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Términos y Condiciones -->
+    <div class="modal" id="termsModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-file-contract"></i> Términos y Condiciones</h2>
+            <div class="modal-body">
+                <h3><i class="fas fa-check-circle"></i> 1. Aceptación de Términos</h3>
+                <p>Al registrarte en nuestro servicio, aceptas cumplir con estos términos y condiciones.</p>
+                
+                <h3><i class="fas fa-user-shield"></i> 2. Privacidad y Seguridad</h3>
+                <p>Respetamos tu privacidad y protegemos tus datos personales según nuestra política de privacidad.</p>
+                
+                <h3><i class="fas fa-lock"></i> 3. Responsabilidades</h3>
+                <p>Eres responsable de mantener la confidencialidad de tu cuenta y contraseña.</p>
+                
+                <h3><i class="fas fa-ban"></i> 4. Uso Aceptable</h3>
+                <p>No está permitido el uso del servicio para actividades ilegales o no autorizadas.</p>
+                
+                <h3><i class="fas fa-sync-alt"></i> 5. Modificaciones</h3>
+                <p>Nos reservamos el derecho de modificar estos términos en cualquier momento.</p>
+                
+                <p class="modal-date"><i class="far fa-calendar-alt"></i> Fecha de última actualización: Enero 2024</p>
+            </div>
+            <button class="modal-btn" id="acceptTerms">
+                <i class="fas fa-check"></i> Aceptar Términos
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal para Éxito del Registro -->
+    <div class="modal" id="successModal">
+        <div class="modal-content success-modal">
+            <div class="success-icon-large">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2><i class="fas fa-trophy"></i> ¡Registro Exitoso!</h2>
+            <div class="modal-body">
+                <div class="success-details" id="successDetails">
+                    <!-- Los datos se insertarán aquí dinámicamente -->
+                </div>
+                <div class="success-actions">
+                    <button class="success-btn" id="newRegisterBtn">
+                        <i class="fas fa-plus"></i> Nuevo Registro
+                    </button>
+                    <button class="success-btn secondary" id="viewHistoryBtn">
+                        <i class="fas fa-history"></i> Ver Historial
+                    </button>
+                </div>
+            </div>
+            <button class="modal-btn close-success">
+                <i class="fas fa-times"></i> Cerrar
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal para Historial de Registros -->
+    <div class="modal" id="historyModal">
+        <div class="modal-content history-modal">
+            <span class="close-modal">&times;</span>
+            <h2><i class="fas fa-history"></i> Historial de Registros</h2>
+            <div class="history-stats">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-info">
+                        <span class="stat-number" id="totalRegistrations">0</span>
+                        <span class="stat-label">Total Registrados</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-user-check"></i>
+                    <div class="stat-info">
+                        <span class="stat-number" id="todayRegistrations">0</span>
+                        <span class="stat-label">Hoy</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-chart-line"></i>
+                    <div class="stat-info">
+                        <span class="stat-number" id="averageAge">0</span>
+                        <span class="stat-label">Edad Promedio</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="history-controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="historySearch" placeholder="Buscar usuario o email...">
+                </div>
+                <button class="filter-btn" id="filterToday">
+                    <i class="fas fa-calendar-day"></i> Hoy
+                </button>
+                <button class="filter-btn" id="filterAll">
+                    <i class="fas fa-list"></i> Todos
+                </button>
+            </div>
+            
+            <div class="history-list-container">
+                <div class="history-list-header">
+                    <span class="header-item">Usuario</span>
+                    <span class="header-item">Email</span>
+                    <span class="header-item">Edad</span>
+                    <span class="header-item">Fecha</span>
+                    <span class="header-item">Acciones</span>
+                </div>
+                <div class="history-list" id="historyList">
+                    <!-- Los registros se insertarán aquí dinámicamente -->
+                    <div class="empty-history">
+                        <i class="fas fa-user-clock"></i>
+                        <p>No hay registros aún</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="history-actions">
+                <button class="history-action-btn" id="exportHistoryBtn">
+                    <i class="fas fa-download"></i> Exportar CSV
+                </button>
+                <button class="history-action-btn secondary" id="clearHistoryBtn">
+                    <i class="fas fa-trash"></i> Limpiar Historial
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-decoration"></div>
+    <div class="floating-decoration decoration-2"></div>
+    <div class="floating-decoration decoration-3"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
